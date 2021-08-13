@@ -39,6 +39,11 @@ public class MergableItem : DraggableObject
     
     public void AssignToCell(GridCell current)
     {
+        if (_parentCell != null)
+        {
+            _parentCell.SetItemAssigned(null);
+        }
+
         _parentCell = current;
         transform.SetParent(current.transform);
         transform.position = current.transform.position;
