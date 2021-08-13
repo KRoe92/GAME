@@ -7,7 +7,7 @@ public class Game : MonoBehaviour
 	public MergableItem DraggableObjectPrefab;
 	public GridHandler MainGrid;
 
-	private List<string> ActiveRecipes = new List<string>();
+	private List<string> _ActiveRecipes = new List<string>();
 
     private static Game _Instance;
 
@@ -47,21 +47,21 @@ public class Game : MonoBehaviour
 		for (int i = fullCells.Length - 1; i >= 0; i--)
 			MainGrid.ClearCell(fullCells[i]);
 
-		// choose new recipes
-		ActiveRecipes.Clear();
+        // choose new recipes
+        _ActiveRecipes.Clear();
 		difficulty = Mathf.Max(difficulty, 1);
 		for (int i = 0; i < difficulty; i++)
 		{
 			// a 'recipe' has more than 1 ingredient, else it is just a raw ingredient.
 			var recipe = ItemUtils.RecipeMap.FirstOrDefault(kvp => kvp.Value.Count > 1).Key;
-			ActiveRecipes.Add(recipe);
+            _ActiveRecipes.Add(recipe);
 		}
 
 		// populate the board
 		var emptyCells = MainGrid.GetEmptyCells.ToArray();
 		foreach (var cell in emptyCells)
 		{
-			var chosenRecipe = ActiveRecipes[0];
+			var chosenRecipe = _ActiveRecipes[0];
 			var ingredients = ItemUtils.RecipeMap[chosenRecipe].ToArray();
 			var ingredient = ingredients[0];
 			var item = ItemUtils.ItemsMap[ingredient.NodeGUID];
