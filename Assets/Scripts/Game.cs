@@ -6,8 +6,9 @@ public class Game : MonoBehaviour
 {
 	public MergableItem DraggableObjectPrefab;
 	public GridHandler MainGrid;
+    public GameSettings GameSettings;
 
-	private List<string> _ActiveRecipes = new List<string>();
+    private List<string> _ActiveRecipes = new List<string>();
 
     private static Game _Instance;
 
@@ -37,10 +38,10 @@ public class Game : MonoBehaviour
 
 	private void Start()
 	{
-		ReloadLevel(1);
+		ReloadLevel();
 	}
 
-	public void ReloadLevel(int difficulty = 1)
+	public void ReloadLevel()
 	{
 		// clear the board
 		var fullCells = MainGrid.GetFullCells.ToArray();
@@ -49,23 +50,39 @@ public class Game : MonoBehaviour
 
         // choose new recipes
         _ActiveRecipes.Clear();
-		difficulty = Mathf.Max(difficulty, 1);
-		for (int i = 0; i < difficulty; i++)
-		{
-			// a 'recipe' has more than 1 ingredient, else it is just a raw ingredient.
-			var recipe = ItemUtils.RecipeMap.FirstOrDefault(kvp => kvp.Value.Count > 1).Key;
-            _ActiveRecipes.Add(recipe);
-		}
+        int numberOfRecipes = GameSettings.GameRecipes.Length;
+        for (int i = 0; i < numberOfRecipes; i++)
+        {
+            var recipe = GameSettings.GameRecipes[i].MainNodeData.NodeGUID;
+            // a 'recipe' has more than 1 ingredient, else it is just a raw ingredient.
+            if (GameSettings.GameRecipes[i].NodeData.Count > 1)
+            {
+                _ActiveRecipes.Add(recipe);
+            }
+            else
+            {
+                Debug.LogError("Stop adding " + GameSettings.GameRecipes[i].MainNodeData.NodeText + " to the reicpe list, it's an ingredient", GameSettings);
+            }
+        }
 
-		// populate the board
-		var emptyCells = MainGrid.GetEmptyCells.ToArray();
+        if (_ActiveRecipes.Count == 0)
+        {
+            Debug.LogError("No recipes added to " + GameSettings.name, GameSettings);
+            return;
+        }
+
+        // populate the board
+        var emptyCells = MainGrid.GetEmptyCells.ToArray();
 		foreach (var cell in emptyCells)
 		{
-			var chosenRecipe = _ActiveRecipes[0];
-			var ingredients = ItemUtils.RecipeMap[chosenRecipe].ToArray();
-			var ingredient = ingredients[0];
-			var item = ItemUtils.ItemsMap[ingredient.NodeGUID];
-			cell.SpawnItem(item);
+            if (Random.Range(1, 100) <= GameSettings.CellPercentSpawnChance)
+            {
+                var chosenRecipe = _ActiveRecipes[Random.Range(0, _ActiveRecipes.Count)];
+                var ingredients = ItemUtils.RecipeMap[chosenRecipe].ToArray();
+                var ingredient = ingredients[Random.Range(0, ingredients.Length)];
+                var item = ItemUtils.ItemsMap[ingredient.NodeGUID];
+                cell.SpawnItem(item);
+            }
 		}
 	}
 }
