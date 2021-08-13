@@ -9,9 +9,26 @@ public class Game : MonoBehaviour
 
 	private List<string> ActiveRecipes = new List<string>();
 
-	private void Awake()
-	{
-		Screen.fullScreen =
+    private static Game _Instance;
+
+    public static Game Instance
+    {
+        get { return _Instance; }
+    }
+
+    private void Awake()
+    {
+        if(_Instance != null && _Instance != this)
+        {
+            Destroy(this.gameObject);
+            Debug.LogError("More than one instance of Game found");
+        }
+        else
+        {
+            _Instance = this;
+        }
+
+        Screen.fullScreen =
 			false; // https://issuetracker.unity3d.com/issues/game-is-not-built-in-windowed-mode-when-changing-the-build-settings-from-exclusive-fullscreen
 
 		// load all item definitions
