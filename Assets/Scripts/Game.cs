@@ -2,7 +2,7 @@
 using System.Linq;
 using UnityEngine;
 
-public class Game : MonoBehaviour
+public class Game : MonoBehaviourSingleton<Game>
 {
 	public MergableItem DraggableObjectPrefab;
 	public GridHandler MainGrid;
@@ -10,25 +10,9 @@ public class Game : MonoBehaviour
 
     private List<string> _ActiveRecipes = new List<string>();
 
-    private static Game _Instance;
-
-    public static Game Instance
+    protected override void Awake()
     {
-        get { return _Instance; }
-    }
-
-    private void Awake()
-    {
-        if(_Instance != null && _Instance != this)
-        {
-            Destroy(this.gameObject);
-            Debug.LogError("More than one instance of Game found");
-        }
-        else
-        {
-            _Instance = this;
-        }
-
+        base.Awake();
         Screen.fullScreen =
 			false; // https://issuetracker.unity3d.com/issues/game-is-not-built-in-windowed-mode-when-changing-the-build-settings-from-exclusive-fullscreen
 
