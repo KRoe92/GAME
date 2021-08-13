@@ -8,9 +8,13 @@ public static class ItemUtils
 {
 	public static Dictionary<string, NodeContainer> ItemsMap = new Dictionary<string, NodeContainer>();
 	public static Dictionary<string, HashSet<NodeData>> RecipeMap = new Dictionary<string, HashSet<NodeData>>();
+    private static bool _MapsInitialized = false;
 
 	public static void InitializeMap()
 	{
+        if (_MapsInitialized)
+            return;
+
 		var nodes = Resources.LoadAll<NodeContainer>("CraftingObjects");
 		foreach (var node in nodes)
 		{
@@ -49,7 +53,9 @@ public static class ItemUtils
 		}
 
 		Debug.Log($"recipes: {RecipeMap.Count}");
-	}
+        _MapsInitialized = true;
+
+    }
 
 	public static NodeContainer FindBestRecipe(GridCell cell, NodeContainer droppedItem)
 	{
