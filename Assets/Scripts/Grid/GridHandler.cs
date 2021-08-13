@@ -13,8 +13,6 @@ public class GridHandler : MonoBehaviour
 	public List<GridCell> GetFullCells => _fullCells;
 	public List<GridCell> GetEmptyCells => _emptyCells;
 
-    public int GridX;
-    public int GridY;
     public float CellSize;
     public GameObject GridCellPrefab;
 
@@ -22,15 +20,15 @@ public class GridHandler : MonoBehaviour
 
     #region initialization
 
-    public void SpawnGrid()
+    public void SpawnGrid(int gridX, int gridY)
     {
         ClearExistingCells();
 
-        Vector2 startingPoint = new Vector2((GridX * CellSize) / 2, (GridY * CellSize) / 2);
+        Vector2 startingPoint = new Vector2((gridX * CellSize) / 2, (gridY * CellSize) / 2);
 
-        for (int i = 0; i < GridY; i++)
+        for (int i = 0; i < gridY; i++)
         {
-            for (int j = 0; j < GridX; j++)
+            for (int j = 0; j < gridX; j++)
             {
 
                 GridCell cell = Instantiate(GridCellPrefab, transform).GetComponent<GridCell>();
@@ -41,7 +39,7 @@ public class GridHandler : MonoBehaviour
             }
         }
 
-        SetGridNeighbours();
+        SetGridNeighbours(gridX, gridY);
     }
 
     private void ClearExistingCells()
@@ -50,30 +48,30 @@ public class GridHandler : MonoBehaviour
 		_fullCells = new List<GridCell>();
 	}
 
-    private void SetGridNeighbours()
+    private void SetGridNeighbours(int gridX, int gridY)
     {
-        for (int i = 0; i < GridY; i++)
+        for (int i = 0; i < gridY; i++)
         {
 
-            for (int j = 0; j < GridX; j++)
+            for (int j = 0; j < gridX; j++)
             {
-                int rowStart = i * GridX;
+                int rowStart = i * gridX;
                 GridCell currentCell = _emptyCells[j + rowStart];
                 if (j > 0)
                 {
                     currentCell.SetNeighbor(_emptyCells[(j - 1) + rowStart], MoveDirection.Left);
                 }
-                if (j < GridX - 1)
+                if (j < gridX - 1)
                 {
                     currentCell.SetNeighbor(_emptyCells[(j + 1) + rowStart], MoveDirection.Right);
                 }
                 if (i > 0)
                 {
-                    currentCell.SetNeighbor(_emptyCells[j + (rowStart - GridX)], MoveDirection.Down);
+                    currentCell.SetNeighbor(_emptyCells[j + (rowStart - gridX)], MoveDirection.Down);
                 }
-                if (i < GridY - 1)
+                if (i < gridY - 1)
                 {
-                    currentCell.SetNeighbor(_emptyCells[j + (rowStart + GridX)], MoveDirection.Up);
+                    currentCell.SetNeighbor(_emptyCells[j + (rowStart + gridX)], MoveDirection.Up);
                 }
             }
         }

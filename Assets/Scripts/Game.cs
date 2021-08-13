@@ -20,9 +20,9 @@ public class Game : MonoBehaviourSingleton<Game>
 		ItemUtils.InitializeMap();
 	}
 
-	private void Start()
+	public void StartGame(int gridX, int gridY)
 	{
-        MainGrid.SpawnGrid();
+        MainGrid.SpawnGrid(gridX, gridY);
         ReloadLevel();
 	}
 
