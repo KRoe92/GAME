@@ -7,63 +7,77 @@ public class GridHandler : MonoBehaviour
 {
 	#region fields
 
-	//temp until refactor generation code
-	[SerializeField] List<Transform> _rows = new List<Transform>();
-
 	//caching
 	[SerializeField] protected List<GridCell> _emptyCells;
 	[SerializeField] protected List<GridCell> _fullCells;
 	public List<GridCell> GetFullCells => _fullCells;
 	public List<GridCell> GetEmptyCells => _emptyCells;
 
-	#endregion
+    public int GridX;
+    public int GridY;
+    public float CellSize;
+    public GameObject GridCellPrefab;
 
-	#region initialization
+    #endregion
 
-	public void HackishInitialization()
-	{
-		ClearExistingCells();
+    #region initialization
 
-		for (int i = 0; i < _rows.Count; i++)
-		{
-			//each row
-			List<GridCell> currentRow = _rows[i].GetComponentsInChildren<GridCell>().ToList();
-			List<GridCell> upperRow = i > 0 ? _rows[i - 1].GetComponentsInChildren<GridCell>().ToList() : null;
-			List<GridCell> lowerRow = i + 1 < _rows.Count ? _rows[i + 1].GetComponentsInChildren<GridCell>().ToList() : null;
+    public void SpawnGrid()
+    {
+        ClearExistingCells();
 
-			for (int j = 0; j < currentRow.Count; j++)
-			{
-				//each cell
-				currentRow[j].SetNeighbor(upperRow?[j], MoveDirection.Up);
-				currentRow[j].SetNeighbor(lowerRow?[j], MoveDirection.Down);
+        Vector2 startingPoint = new Vector2((GridX * CellSize) / 2, (GridY * CellSize) / 2);
 
-				var leftN = j > 0 ? currentRow[j - 1] : null;
-				currentRow[j].SetNeighbor(leftN, MoveDirection.Left);
+        for (int i = 0; i < GridY; i++)
+        {
+            for (int j = 0; j < GridX; j++)
+            {
 
-				var rightN = j < currentRow.Count - 1 ? currentRow?[j + 1] : null;
-				currentRow[j].SetNeighbor(rightN, MoveDirection.Right);
-				currentRow[j].SetHandler(this);
-				
-				//cache the cell as empty
-				_emptyCells.Add(currentRow[j]);
-			}
+                GridCell cell = Instantiate(GridCellPrefab, transform).GetComponent<GridCell>();
+                cell.SetHandler(this);
 
-		}
-	}
+                cell.transform.localPosition = new Vector2(j * CellSize, i * CellSize) - startingPoint;
+                _emptyCells.Add(cell);
+            }
+        }
 
-	private void ClearExistingCells()
+        SetGridNeighbours();
+    }
+
+    private void ClearExistingCells()
 	{
 		_emptyCells = new List<GridCell>();
 		_fullCells = new List<GridCell>();
 	}
 
-	private void Awake()
-	{
-		foreach (var cell in _emptyCells)
-		{
-			cell.SetHandler(this);
-		}
-	}
+    private void SetGridNeighbours()
+    {
+        for (int i = 0; i < GridY; i++)
+        {
+
+            for (int j = 0; j < GridX; j++)
+            {
+                int rowStart = i * GridX;
+                GridCell currentCell = _emptyCells[j + rowStart];
+                if (j > 0)
+                {
+                    currentCell.SetNeighbor(_emptyCells[(j - 1) + rowStart], MoveDirection.Left);
+                }
+                if (j < GridX - 1)
+                {
+                    currentCell.SetNeighbor(_emptyCells[(j + 1) + rowStart], MoveDirection.Right);
+                }
+                if (i > 0)
+                {
+                    currentCell.SetNeighbor(_emptyCells[j + (rowStart - GridX)], MoveDirection.Down);
+                }
+                if (i < GridY - 1)
+                {
+                    currentCell.SetNeighbor(_emptyCells[j + (rowStart + GridX)], MoveDirection.Up);
+                }
+            }
+        }
+    }
 
 	#endregion
 

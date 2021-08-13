@@ -22,7 +22,8 @@ public class Game : MonoBehaviourSingleton<Game>
 
 	private void Start()
 	{
-		ReloadLevel();
+        MainGrid.SpawnGrid();
+        ReloadLevel();
 	}
 
 	public void ReloadLevel()
