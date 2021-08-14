@@ -15,8 +15,8 @@ have been nice to have a bit more info on the project as it took a few minutes t
 
 6) Setting up the Main menu was fine
 
-7) The volume menu was fine, but there was no volume in the project so it was a little tricky to test :D but i'm pretty positive that AudioListener.audio handles the game volume. 
-The player prefs seem to work well for persisting the volume value.
+7) The volume menu was fine, but there was no volume in the project so it was a little tricky to test :D but I've added some music and AudioListener.audio seems to handles the game volume. 
+The player prefs seem to work well for persisting the volume value, but a default value needs to be set for when the player has no prefs.
 
 8) The bulk of the build errors were files referencing the unity editor. These either need to be put between  #if UNITY_EDITOR  #endif or throw the entire file into an editor folder.
 
