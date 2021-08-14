@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84a87e5790c96384c8b2a63511c49fca, type: 3}
+  m_Name: BigMeal
+  m_EditorClassIdentifier: 
+  CellPercentSpawnChance: 75
+  GameRecipes:
+  - {fileID: 11400000, guid: 8a588e3571bee614eb95eab00d89ca9b, type: 2}
+  - {fileID: 11400000, guid: 814d39dfb7f9db947957d0b41334fcdf, type: 2}
+  - {fileID: 11400000, guid: 05a16d392c0f1654dae359099b192b35, type: 2}
+  - {fileID: 11400000, guid: 309eba5d63a280245b98cf1a66267fb7, type: 2}
+  - {fileID: 11400000, guid: a755bd896f7682a40934db35e0a61dac, type: 2}
+  - {fileID: 11400000, guid: 9b1f041a87dc2db42924942dd9c20fbf, type: 2}
